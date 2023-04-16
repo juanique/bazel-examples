@@ -1,0 +1,13 @@
+load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+load("@rules_python//python:defs.bzl", "py_binary")
+
+compile_pip_requirements(
+    name = "compile_pip",
+    requirements_in = "requirements.txt",
+    requirements_txt = "requirements_lock.txt",
+)
+
+py_binary(
+    name = "version",
+    srcs = ["version.py"],
+)
