@@ -1,4 +1,4 @@
+from rich import print
 import sys
 
-print("Hello world")
-print(sys.version)
+print(f"Python version, [bold magenta]{sys.version}[/bold magenta]!", ":vampire:", locals())

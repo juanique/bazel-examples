@@ -1,6 +1,8 @@
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("@rules_python//python:defs.bzl", "py_binary")
 
+exports_files(["requirements_lock.txt"])
+
 compile_pip_requirements(
     name = "compile_pip",
     requirements_in = "requirements.txt",
@@ -10,4 +12,7 @@ compile_pip_requirements(
 py_binary(
     name = "version",
     srcs = ["version.py"],
+    deps = [
+        "@pip_deps_rich//:pkg",
+    ],
 )
