@@ -1,0 +1,15 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+cc_binary(
+    name = "cc_version",
+    srcs = ["cc_version.cc"],
+)
+
+platform(
+    name = "mingw",
+    constraint_values = [
+        "@platforms//os:windows",
+        "@platforms//cpu:x86_64",
+        "@bazel_tools//tools/cpp:mingw",
+    ],
+)
