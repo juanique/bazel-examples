@@ -1,0 +1,14 @@
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+
+oci_image(
+    name = "hello_ubuntu",
+    base = "@ubuntu22",
+    entrypoint = ["lsb_release", "-a"],
+)
+
+oci_tarball(
+    name = "hello_ubuntu_tar",
+    image = ":hello_ubuntu",
+    repo_tags = ["latest"],
+)
+
