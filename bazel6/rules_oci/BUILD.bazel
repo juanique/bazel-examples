@@ -4,7 +4,6 @@ oci_image(
     name = "hello_ubuntu",
     base = "@ubuntu22",
     entrypoint = ["cat", "/etc/os-release"],
-    tars = [":hello_tar"],
 )
 
 oci_tarball(
