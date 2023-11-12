@@ -1,12 +1,37 @@
-#include<iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <errno.h>
+#include <stdbool.h>
+
+bool fileOrDirExists(const char *path) {
+    struct stat statbuf;
+
+    if (lstat(path, &statbuf) == -1) {
+        if (errno == ENOENT) {
+            // File or directory does not exist
+            return false;
+        } else {
+            // An error other than ENOENT occurred, crash the program
+            perror("Unexpected error occurred in lstat");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    // File or directory exists
+    return true;
+}
 
 int main() {
-    if (__cplusplus == 202101L) std::cout << "C++23";
-    else if (__cplusplus == 202002L) std::cout << "C++20";
-    else if (__cplusplus == 201703L) std::cout << "C++17";
-    else if (__cplusplus == 201402L) std::cout << "C++14";
-    else if (__cplusplus == 201103L) std::cout << "C++11";
-    else if (__cplusplus == 199711L) std::cout << "C++98";
-    else std::cout << "pre-standard C++." << __cplusplus;
-    std::cout << "\n";
+    const char *path = "/tmp/pepito";  // Replace with your path
+
+    if (fileOrDirExists(path)) {
+        printf("The path '%s' exists.\n", path);
+    } else {
+        printf("The path '%s' does not exist.\n", path);
+    }
+
+    return 0;
 }
