@@ -1,7 +1,7 @@
 # Run example
 
 ```
-bazel run :cc_version
+bazel run :main
 ```
 
 # General notes
