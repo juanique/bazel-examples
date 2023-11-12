@@ -25,7 +25,7 @@ bool fileOrDirExists(const char *path) {
 }
 
 int main() {
-    const char *path = "/tmp/pepito";  // Replace with your path
+    const char *path = "/tmp/i-dont-exist";  // Replace with your path
 
     if (fileOrDirExists(path)) {
         printf("The path '%s' exists.\n", path);
