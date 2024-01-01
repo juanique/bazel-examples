@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "loader_lib",
+    srcs = [
+        "docker.go",
+        "files.go",
+        "imagebuild.go",
+        "json.go",
+        "main.go",
+        "tar.go",
+    ],
+    importpath = "github.com/juaniquer/bazel-examples/oci/loader",
+    visibility = ["//visibility:private"],
+    deps = [
+        "@com_github_docker_docker//api/types",
+        "@com_github_docker_docker//client",
+    ],
+)
+
+go_binary(
+    name = "loader",
+    embed = [":loader_lib"],
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,99 @@
+diff --git a/oci/private/tarball.bzl b/oci/private/tarball.bzl
+index d2b0118..2d46701 100644
+--- a/oci/private/tarball.bzl
++++ b/oci/private/tarball.bzl
+@@ -52,20 +52,20 @@ attrs = {
+ 
+ def _tarball_impl(ctx):
+     image = ctx.file.image
+-    tarball = ctx.actions.declare_file("{}/tarball.tar".format(ctx.label.name))
++    tarball_path = "/tmp/" + ctx.label.package + "/" + ctx.label.name + ".tarball.tar"
+     yq_bin = ctx.toolchains["@aspect_bazel_lib//lib:yq_toolchain_type"].yqinfo.bin
+-    executable = ctx.actions.declare_file("{}/tarball.sh".format(ctx.label.name))
++    executable = ctx.actions.declare_file("{}/build_tarball.sh".format(ctx.label.name))
+     repo_tags = ctx.file.repo_tags
+ 
+     substitutions = {
+         "{{format}}": ctx.attr.format,
+-        "{{yq}}": yq_bin.path,
+-        "{{image_dir}}": image.path,
+-        "{{tarball_path}}": tarball.path,
++        "{{yq}}": yq_bin.short_path,
++        "{{image_dir}}": image.short_path,
++        "{{tarball_path}}": tarball_path,
+     }
+ 
+     if ctx.attr.repo_tags:
+-        substitutions["{{tags}}"] = repo_tags.path
++        substitutions["{{tags}}"] = repo_tags.short_path
+ 
+     ctx.actions.expand_template(
+         template = ctx.file._tarball_sh,
+@@ -74,28 +74,42 @@ def _tarball_impl(ctx):
+         substitutions = substitutions,
+     )
+ 
+-    ctx.actions.run(
+-        executable = util.maybe_wrap_launcher_for_windows(ctx, executable),
+-        inputs = [image, repo_tags, executable],
+-        outputs = [tarball],
+-        tools = [yq_bin],
+-        mnemonic = "OCITarball",
+-        progress_message = "OCI Tarball %{label}",
+-    )
+-
+-    exe = ctx.actions.declare_file(ctx.label.name + ".sh")
++    exe = ctx.actions.declare_file(ctx.label.name + ".load.sh")
+ 
+     ctx.actions.expand_template(
+         template = ctx.file._run_template,
+         output = exe,
+         substitutions = {
+-            "{{image_path}}": tarball.short_path,
++            "{{image_path}}": tarball_path,
+         },
+         is_executable = True,
+     )
+ 
++    build_and_load_exe = ctx.actions.declare_file(ctx.label.name + ".sh")
++    script = """\
++#!/bin/bash
++
++set -e
++
++mkdir -p $(dirname {tarball_path})
++{build_tarball}
++exec ./{load_tarball}""".format(
++    tarball_path = tarball_path,
++    build_tarball = executable.short_path,
++    load_tarball = exe.short_path,
++)
++
++    ctx.actions.write(
++        output = build_and_load_exe,
++        content = script,
++        is_executable = True,
++    )
++
++    runfiles = ctx.runfiles(files = [yq_bin, image, repo_tags, executable, exe])
++    runfiles = runfiles.merge(ctx.attr.image[DefaultInfo].default_runfiles)
++
+     return [
+-        DefaultInfo(files = depset([tarball]), runfiles = ctx.runfiles(files = [tarball]), executable = exe),
++        DefaultInfo(files = depset([build_and_load_exe]), runfiles = runfiles, executable = build_and_load_exe),
+     ]
+ 
+ oci_tarball = rule(
+diff --git a/oci/private/tarball.sh.tpl b/oci/private/tarball.sh.tpl
+index 2b5052f..20f113b 100644
+--- a/oci/private/tarball.sh.tpl
++++ b/oci/private/tarball.sh.tpl
+@@ -10,6 +10,8 @@ readonly TARBALL_PATH="{{tarball_path}}"
+ readonly REPOTAGS=($(cat "{{tags}}"))
+ readonly INDEX_FILE="${IMAGE_DIR}/index.json"
+ 
++echo "Staging dir is: ${STAGING_DIR}"
++
+ cp_f_with_mkdir() {
+   SRC="$1"
+   DST="$2"
