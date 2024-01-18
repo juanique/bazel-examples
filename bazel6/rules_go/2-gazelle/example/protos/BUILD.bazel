@@ -1,0 +1,7 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+proto_library(
+    name = "echo_proto",
+    srcs = ["echo_service.proto"],
+    visibility = ["//visibility:public"],
+)
