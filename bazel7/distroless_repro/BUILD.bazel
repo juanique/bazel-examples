@@ -1,0 +1,32 @@
+load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+load("@debian_packages//:packages.bzl", "debian_package_layer")
+load("@aspect_bazel_lib//lib:tar.bzl", "tar")
+
+py_binary(
+    name = "version",
+    srcs = ["version.py"],
+)
+
+tar(
+    name = "binary_layer",
+    srcs = [":version"],
+)
+
+oci_image(
+    name = "rules_debian_packages_image",
+    architecture = "amd64",
+    entrypoint = ["/usr/bin/python3.11", "--version"],
+    env = {"LANG": "C.UTF-8"},
+    os = "linux",
+    tars = [
+        debian_package_layer("python3"),
+    ],
+    visibility = ["//visibility:private"],
+)
+
+oci_tarball(
+    name = "rules_debian_packages_image.tar",
+    image = ":rules_debian_packages_image",
+    repo_tags = ["rules_debian_packages:latest"],
+)
