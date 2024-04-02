@@ -1,0 +1,22 @@
+#  To generate the debian.lock.json run the following command
+#
+#     bazel run @debian_rules_distroless//:lock
+#
+# See debian_package_index at WORKSPACE.bazel
+version: 1
+
+sources:
+  - channel: bookworm main
+    url: https://snapshot-cloudflare.debian.org/archive/debian/20240401T150053Z
+  - channel: bookworm-security main
+    url: https://snapshot-cloudflare.debian.org/archive/debian-security/20240401T150053Z
+  - channel: bookworm-updates main
+    url: https://snapshot-cloudflare.debian.org/archive/debian/20240401T150053Z
+
+archs:
+  - "amd64"
+  - "arm64"
+
+packages:
+    - "python3"
+    - "python3.11-minimal"
