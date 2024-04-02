@@ -21,6 +21,7 @@ oci_image(
     os = "linux",
     tars = [
         debian_package_layer("python3"),
+        # debian_package_layer("python3.11-minimal"),
     ],
     visibility = ["//visibility:private"],
 )
@@ -29,4 +30,23 @@ oci_tarball(
     name = "rules_debian_packages_image.tar",
     image = ":rules_debian_packages_image",
     repo_tags = ["rules_debian_packages:latest"],
+)
+
+oci_image(
+    name = "rules_distroless_image",
+    architecture = "amd64",
+    entrypoint = ["/usr/bin/python3.11", "--version"],
+    env = {"LANG": "C.UTF-8"},
+    os = "linux",
+    tars = [
+        # "@debian_distroless//python3/amd64",
+        "@debian_distroless//python3.11-minimal/amd64",
+    ],
+    visibility = ["//visibility:private"],
+)
+
+oci_tarball(
+    name = "rules_distroless_image.tar",
+    image = ":rules_distroless_image",
+    repo_tags = ["rules_distroless_image:latest"],
 )
