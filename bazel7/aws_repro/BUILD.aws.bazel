@@ -44,5 +44,6 @@ cmake(
     deps = [
         "@curl",
         "@openssl",
+        "@zlib",
     ],
 )
