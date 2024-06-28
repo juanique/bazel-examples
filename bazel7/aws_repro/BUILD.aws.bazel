@@ -1,0 +1,49 @@
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
+
+filegroup(
+    name = "sdk",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"],
+)
+
+cmake(
+    name = "aws_sdk_cpp",
+    cache_entries = {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_ONLY": "s3",
+        "BUILD_SHARED_LIBS": "ON",
+        "BUILD_TESTING": "OFF",
+        "ENABLE_TESTING": "OFF",
+    },
+    env = {
+        "PLATFORM_LINUX": "ON",
+        "ENABLE_CURL_CLIENT": "ON",
+        "ENABLE_OPENSSL_ENCRYPTION": "ON",
+        "BUILD_TESTING": "OFF",
+        "ENABLE_TESTING": "OFF",
+        #"CMAKE_PREFIX_PATH": "$(locations @openssl//:openssl)/include/openssl/;$(locations @zlib//:zlib);$(locations @curl//:curl)",
+    },
+    includes = [
+        "aws-cpp-sdk-core/include/",
+        "aws-cpp-sdk-kinesis/include/",
+        "aws-cpp-sdk-s3/include/",
+        "aws-cpp-sdk-sts/include/",
+    ],
+    install = True,
+    lib_source = ":sdk",
+    linkopts = select({
+        "@platforms//os:linux": [
+            "-lpthread",
+        ],
+        "//conditions:default": [],
+    }),
+    out_shared_libs = [
+        "libaws-cpp-sdk-core.so",
+        "libaws-cpp-sdk-s3.so",
+    ],
+    deps = [
+        "@curl",
+        "@openssl",
+        "@zlib",
+    ],
+)
