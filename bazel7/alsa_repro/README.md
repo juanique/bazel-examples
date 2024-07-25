@@ -9,14 +9,14 @@ sudo apt-get install -y gcc build-essential
 To attempt the build:
 
 ```
-bazel build @aws_sdk//:aws_sdk_cpp --spawn_strategy=processwrapper-sandbox --copt=-w
+bazel build @alsa//:alsa_with_rules_foreign
 ```
 
-It fails:
+It fails with:
 
 ```
-CMake Error at cmake/external_dependencies.cmake:46 (message):
-  Could not find openssl
-Call Stack (most recent call first):
-  CMakeLists.txt:112 (include)
+configure.ac:49: error: possibly undefined macro: AC_CHECK_ATTRIBUTE_SYMVER
+      If this token and others are legitimate, please use m4_pattern_allow.
+      See the Autoconf documentation.
+make: *** [Makefile:384: /home/juan-munoz/.cache/bazel/_bazel_juan-munoz/95fba053af938229db5bffcfc16c50fe/sandbox/linux-sandbox/3/execroot/bazel-example/external/alsa/configure] Error 1
 ```
