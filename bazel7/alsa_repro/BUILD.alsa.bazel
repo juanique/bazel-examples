@@ -1,0 +1,94 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "configure_make")
+
+INCLUDES = [
+    "include/alisp.h",
+    "include/alsa-symbols.h",
+    "include/aserver.h",
+    "include/asoundef.h",
+    "include/asoundlib-head.h",
+    "include/asoundlib-tail.h",
+    "include/asoundlib.h",
+    "include/bswap.h",
+    "include/conf.h",
+    "include/config.h.in",
+    "include/control.h",
+    "include/control_external.h",
+    "include/control_plugin.h",
+    "include/error.h",
+    "include/global.h",
+    "include/hwdep.h",
+    "include/input.h",
+    "include/list.h",
+    "include/local.h",
+    "include/mixer.h",
+    "include/mixer_abst.h",
+    "include/output.h",
+    "include/pcm.h",
+    "include/pcm_external.h",
+    "include/pcm_extplug.h",
+    "include/pcm_ioplug.h",
+    "include/pcm_old.h",
+    "include/pcm_plugin.h",
+    "include/pcm_rate.h",
+    "include/rawmidi.h",
+    "include/search.h",
+    "include/seq.h",
+    "include/seq_event.h",
+    "include/seq_midi_event.h",
+    "include/seqmid.h",
+    "include/sys.h",
+    "include/timer.h",
+    "include/topology.h",
+    "include/type_compat.h",
+    "include/ump.h",
+    "include/ump_msg.h",
+    "include/use-case.h",
+    "include/version.h",
+]
+
+filegroup(
+    name = "all_srcs",
+    srcs = glob(
+        include = [
+            "*",
+            "src/**",
+            "doc/**",
+            "modules/**",
+            "alsalisp/**",
+            "aserver/**",
+            "test/**",
+            "utils/**",
+            "include/Makefile.in",
+            "include/sound/**/*",
+        ] + INCLUDES,
+        exclude = [
+            "*.bazel",
+        ],
+    ),
+)
+
+cc_library(
+    name = "alsa_with_cc_library",
+    srcs = glob(
+        include = [
+            "src/**/*.c",
+        ],
+    ),
+    hdrs = INCLUDES,
+    strip_include_prefix = "include",  # allow the code to #include <opus.h> directly
+    visibility = ["//visibility:public"],
+)
+
+configure_make(
+    name = "alsa_with_rules_foreign",
+    configure_options = [
+    ],
+    lib_source = ":all_srcs",
+    out_static_libs = select({
+        "//conditions:default": ["alsa.a"],
+    }),
+    visibility = ["//visibility:public"],
+    deps = [
+    ],
+)
