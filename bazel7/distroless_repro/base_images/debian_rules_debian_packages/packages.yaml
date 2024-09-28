@@ -1,0 +1,6 @@
+- distros: ["debian12"]
+  archs: ["amd64"]
+  packages:
+    - base-files
+    - python3
+    - bash
