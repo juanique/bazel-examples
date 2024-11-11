@@ -1,0 +1,83 @@
+workspace(name = "bazel-example")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "rules_cc",
+    sha256 = "3d9e271e2876ba42e114c9b9bc51454e379cbf0ec9ef9d40e2ae4cec61a31b40",
+    strip_prefix = "rules_cc-0.0.6",
+    urls = ["https://github.com/bazelbuild/rules_cc/releases/download/0.0.6/rules_cc-0.0.6.tar.gz"],
+)
+
+http_archive(
+    name = "rules_foreign_cc",
+    sha256 = "476303bd0f1b04cc311fc258f1708a5f6ef82d3091e53fd1977fa20383425a6a",
+    strip_prefix = "rules_foreign_cc-0.10.1",
+    url = "https://github.com/bazelbuild/rules_foreign_cc/releases/download/0.10.1/rules_foreign_cc-0.10.1.tar.gz",
+)
+
+load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
+
+# This sets up some common toolchains for building targets. For more details, please see
+# https://bazelbuild.github.io/rules_foreign_cc/0.10.1/flatten.html#rules_foreign_cc_dependencies
+rules_foreign_cc_dependencies()
+
+http_archive(
+    name = "curl",
+    build_file = "//:BUILD.curl.bazel",
+    sha256 = "e56b3921eeb7a2951959c02db0912b5fcd5fdba5aca071da819e1accf338bbd7",
+    strip_prefix = "curl-7.74.0",
+    type = "tar.gz",
+    urls = [
+        "https://mirror.bazel.build/curl.se/download/curl-7.74.0.tar.gz",
+        "https://curl.se/download/curl-7.74.0.tar.gz",
+        "https://github.com/curl/curl/releases/download/curl-7_74_0/curl-7.74.0.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "aws_sdk",
+    build_file = "//:BUILD.aws.bazel",
+    sha256 = "89905075fe50aa13e0337ff905c2e8c1ce9caf77a3504484a7cda39179120ffc",
+    strip_prefix = "aws-sdk-cpp-1.5.8",
+    urls = [
+        "https://storage.googleapis.com/mirror.tensorflow.org/github.com/aws/aws-sdk-cpp/archive/1.5.8.tar.gz",
+        "https://github.com/aws/aws-sdk-cpp/archive/1.5.8.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "openssl",
+    build_file = "//:BUILD.openssl.bazel",
+    sha256 = "9384a2b0570dd80358841464677115df785edb941c71211f75076d72fe6b438f",
+    strip_prefix = "openssl-1.1.1o",
+    urls = [
+        "https://www.openssl.org/source/openssl-1.1.1o.tar.gz",
+        "https://github.com/openssl/openssl/archive/OpenSSL_1_1_1o.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "rules_perl",
+    sha256 = "765e6a282cc38b197a6408c625bd3fc28f3f2d44353fb4615490a6eb0b8f420c",
+    strip_prefix = "rules_perl-e3ed0f1727d15db6c5ff84f64454b9a4926cc591",
+    urls = [
+        "https://github.com/bazelbuild/rules_perl/archive/e3ed0f1727d15db6c5ff84f64454b9a4926cc591.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "zlib",
+    build_file = "//:BUILD.zlib.bazel",
+    sha256 = "ff0ba4c292013dbc27530b3a81e1f9a813cd39de01ca5e0f8bf355702efa593e",
+    strip_prefix = "zlib-1.3",
+    url = "https://github.com/madler/zlib/releases/download/v1.3/zlib-1.3.tar.gz",
+)
+
+#########
+## rules perl
+load("@rules_perl//perl:deps.bzl", "perl_register_toolchains", "perl_rules_dependencies")
+
+perl_rules_dependencies()
+
+perl_register_toolchains()
