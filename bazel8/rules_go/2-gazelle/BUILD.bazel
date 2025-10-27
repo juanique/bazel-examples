@@ -1,0 +1,19 @@
+load("@gazelle//:def.bzl", "gazelle")
+load("@rules_go//go:def.bzl", "go_binary", "go_library")
+
+# gazelle:prefix github.com/juanique/bazel-examples
+gazelle(name = "gazelle")
+
+go_library(
+    name = "bazel-examples_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/juanique/bazel-examples",
+    visibility = ["//visibility:private"],
+    deps = ["@com_github_fatih_color//:color"],
+)
+
+go_binary(
+    name = "bazel-examples",
+    embed = [":bazel-examples_lib"],
+    visibility = ["//visibility:public"],
+)
