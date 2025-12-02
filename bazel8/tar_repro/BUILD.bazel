@@ -1,0 +1,6 @@
+load("@tar.bzl//:tar.bzl", "mutate", "tar")
+
+tar(
+    name = "tar",
+    srcs = ["@multitool//tools/gh:gh"]
+)

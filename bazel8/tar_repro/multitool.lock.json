@@ -1,0 +1,39 @@
+{
+  "$schema": "../../lockfile.schema.json",
+  "gh": {
+    "binaries": [
+        {
+            "kind": "archive",
+            "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_macOS_amd64.zip",
+            "sha256": "1c545505b5b88feaffeba00b7284ccac3f2002b67461b1246eaec827eb07c31b",
+            "file": "gh_2.44.1_macOS_amd64/bin/gh",
+            "os": "macos",
+            "cpu": "x86_64"
+        },
+        {
+            "kind": "archive",
+            "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_macOS_amd64.zip",
+            "sha256": "1c545505b5b88feaffeba00b7284ccac3f2002b67461b1246eaec827eb07c31b",
+            "file": "gh_2.44.1_macOS_amd64/bin/gh",
+            "os": "macos",
+            "cpu": "arm64"
+        },
+        {
+            "kind": "archive",
+            "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_linux_amd64.tar.gz",
+            "sha256": "f11eefb646768e3f53e2185f6d3b01b4cb02112c2c60e65a4b5875150287ff97",
+            "file": "gh_2.44.1_linux_amd64/bin/gh",
+            "os": "linux",
+            "cpu": "x86_64"
+        },
+        {
+            "kind": "archive",
+            "url": "https://github.com/cli/cli/releases/download/v2.44.1/gh_2.44.1_windows_amd64.zip",
+            "sha256": "5a19a334d5032cfcb01e71e418c5e355104f7afd9129daf8939b729ffa46aa08",
+            "file": "bin/gh.exe",
+            "os": "windows",
+            "cpu": "x86_64"
+        }
+    ]
+  }
+}

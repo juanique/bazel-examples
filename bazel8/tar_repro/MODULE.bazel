@@ -1,0 +1,12 @@
+module(
+    name = "bazel-examples",
+    version = "0.0.0",
+)
+
+bazel_dep(name = "tar.bzl", version = "0.7.0")
+
+# This is just to find a source of external packages to tar
+bazel_dep(name = "rules_multitool", version = "1.9.0")
+multitool = use_extension("@rules_multitool//multitool:extension.bzl", "multitool")
+multitool.hub(lockfile = "//:multitool.lock.json")
+use_repo(multitool, "multitool")
