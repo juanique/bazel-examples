@@ -7,6 +7,10 @@ bazel_dep(name = "rules_cc", version = "0.2.16")
 bazel_dep(name = "hermetic_cc_toolchain", version = "3.1.0")
 
 toolchains = use_extension("@hermetic_cc_toolchain//toolchain:ext.bzl", "toolchains")
+toolchains.exec_platform(
+  os = "linux",
+  arch = "amd64",
+)
 use_repo(toolchains, "zig_sdk")
 
 register_toolchains(
